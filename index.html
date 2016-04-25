@@ -32,17 +32,17 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
-    <ng-include src="pages/header.html"></ng-include>
+    <ng-include src="'pages/header.html'"></ng-include>
 
-    <ng-include src="pages/sidebar.html"></ng-include>
+    <ng-include src="'pages/sidebar.html'"></ng-include>
 
     <div class="content-wrapper">
       <div ng-view></div>
     </div>
 
-    <ng-include src="pages/footer.html"></ng-include>
+    <ng-include src="'pages/footer.html'"></ng-include>
 
-    <ng-include src="pages/control-sidebar.html"></ng-include>
+    <ng-include src="'pages/control-sidebar.html'"></ng-include>
   </div>
 
   <ul class="menu">
@@ -54,8 +54,9 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-  <script src="libs/angular.min.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-route/angular-route.min.js"></script>
   <script src="app.js"></script>
+  <script src="pages/dashboard/dashboard.js"></script>
 </body>
 </html>

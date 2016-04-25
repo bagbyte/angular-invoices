@@ -1,0 +1,13 @@
+{
+  "name": "BusinessManager",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular":          "1.5.5",
+    "angular-route":    "1.5.5",
+    "angular-sanitize": "1.5.5",
+    "angular-mocks":    "1.5.5",
+    "underscore":       "1.6.0",
+    "restangular":      "1.4.0"
+  },
+  "analytics": false
+}

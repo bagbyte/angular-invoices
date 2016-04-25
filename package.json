@@ -1,0 +1,16 @@
+{
+  "name": "BusinessManager",
+  "namelower": "business-manager",
+  "version": "0.0.1",
+  "description": "A usefull web application for managing your business",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "bagbyte@github.com:angular-invoices.git"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "postinstall": "bower install"
+  }
+}
