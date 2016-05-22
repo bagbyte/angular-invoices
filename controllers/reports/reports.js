@@ -11,6 +11,8 @@ angular.module('businessManager.reports', ['ui.bootstrap.modal'])
         $scope.expense = emptyExpense();
         $scope.newExpense = true;
 
+        $scope.expenseToDelete = null;
+
         getReports();
 
         function getReports() {
@@ -150,9 +152,12 @@ angular.module('businessManager.reports', ['ui.bootstrap.modal'])
         };
 
         $scope.deleteExpense = function(index) {
-            $scope.report.expenses.splice(index, 1);
+            if ($scope.expenseToDelete += null) {
+                $scope.report.expenses.splice(index, 1);
 
-            $scope.updateExtraValue();
+                $scope.unsetExpenseToDelete();
+                $scope.updateExtraValue();
+            }
         };
 
         $scope.setCurrentExpense = function(index) {
@@ -170,6 +175,14 @@ angular.module('businessManager.reports', ['ui.bootstrap.modal'])
             $scope.expense = expense;
         };
 */
+
+        $scope.setExpenseToDelete = function(index) {
+            $scope.expenseToDelete = index;
+        };
+
+        $scope.unsetExpenseToDelete = function() {
+            $scope.expenseToDelete = null;
+        };
 
         $('#report-date').daterangepicker({
             singleDatePicker: true,
