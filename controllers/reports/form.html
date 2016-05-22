@@ -16,46 +16,93 @@
           </div>
           <div class="x_content">
             <br />
-            <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+            <form id="report-form" data-parsley-validate class="form-horizontal form-label-left">
 
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">Date <span class="required">*</span>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="report-date">Date <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <input type="text" id="date" name="date" required="required" class="form-control has-feedback-left" placeholder="Date" aria-describedby="inputSuccess2Status4">
+                  <input type="text" id="report-date" name="report.date" ng-model="report.date" required="required" class="form-control has-feedback-left" placeholder="Date" aria-describedby="inputSuccess2Status4">
                   <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                   <span id="inputSuccess2Status4" class="sr-only">(success)</span>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="total">Total <span class="required">*</span>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="report-total">Total <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <input type="text" id="total" name="total" required="required" class="form-control col-md-7 col-xs-12">
+                  <input type="text" id="report-total" name="report.total" ng-model="report.total" ng-change="updateExtraValue()" required="required" class="form-control col-md-7 col-xs-12 has-feedback-left">
+                  <span class="fa fa-eur form-control-feedback left" aria-hidden="true"></span>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cash">Cash <span class="required">*</span>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="report-cash">Cash <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <input type="text" id="cash" name="cash" required="required" class="form-control col-md-7 col-xs-12">
+                  <input type="text" id="report-cash" name="report.cash" ng-model="report.cash" ng-change="updateExtraValue()" required="required" class="form-control col-md-7 col-xs-12 has-feedback-left">
+                  <span class="fa fa-eur form-control-feedback left" aria-hidden="true"></span>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Note
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="report-extra">Extra
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <textarea class="form-control" rows="3" placeholder="Additional notes" id="note" name="note"></textarea>
+                  <input type="text" id="report-extra" name="report.extra" disabled class="form-control col-md-7 col-xs-12 has-feedback-left" ng-value="report.extra">
+                  <span class="fa fa-eur form-control-feedback left" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="report-note">Note
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <textarea class="form-control" rows="3" placeholder="Additional notes" id="report-note" name="report.note" ng-model="report.note"></textarea>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" ng-hide="hasExpenses()">
                 <div class="col-md-9 col-md-offset-3">
-                  <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Add expense</button>
+                  <a class="btn btn-success" data-toggle="modal" data-target="#expenseModal" ng-click="emptyExpense()"><i class="fa fa-plus"></i> Add expense</a>
                 </div>
               </div>
 
-              <div class="ln_solid"></div>
+              <div class="ln_solid" ng-hide="hasExpenses()"></div>
+
+              <div ng-show="hasExpenses()" style="margin-top: 40px">
+                <div class="x_title">
+                  <h2>Expenses</h2>
+                  <div class="clearfix"></div>
+                </div>
+
+                <table class="table table-hover">
+                  <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Invoice</th>
+                    <th>Description</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="obj in report.expenses track by $index">
+                    <td>&euro; {{ obj.amount }}</td>
+                    <td>{{ obj.hasInvoice ? "Yes" : "No" }}</td>
+                    <td>{{ obj.description }}</td>
+                    <td style="text-align: right;">
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#expenseModal" ng-click="setCurrentExpense($index)"><i class="fa fa-pencil"></i> Edit</button>
+                      <button type="button" class="btn btn-danger" ng-click="deleteExpense($index)"><i class="fa fa-times"></i> Delete</button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <a class="btn btn-success" data-toggle="modal" data-target="#expenseModal" ng-click="emptyExpense()"><i class="fa fa-plus"></i> Add expense</a>
+                  </div>
+                </div>
+
+                <div class="ln_solid"></div>
+              </div>
 
               <div class="form-group">
                 <div class="col-md-9 col-md-offset-3">
@@ -67,6 +114,58 @@
             </form>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Expense</h4>
+      </div>
+      <div class="modal-body">
+
+        <form id="expense-form" data-parsley-validate class="form-horizontal form-label-left">
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="expense-amount">Amount <span class="required">*</span>
+            </label>
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <input type="text" id="expense-amount" name="expense.amount" ng-model="expense.amount" required="required" class="form-control col-md-7 col-xs-12 has-feedback-left">
+              <span class="fa fa-eur form-control-feedback left" aria-hidden="true"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="expense-hasInvoice">Has invoice
+            </label>
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <input type="checkbox" id="expense-hasInvoice" name="expense.hasInvoice" ng-model="expense.hasInvoice" style="box-shadow:none;" class="form-control col-md-7 col-xs-12">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="expense-description">Description
+            </label>
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <input type="text" id="expense-description" name="expense.description" ng-model="expense.description" required="required" class="form-control col-md-7 col-xs-12">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="expense-note">Note
+            </label>
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <textarea class="form-control" rows="3" placeholder="Additional notes" id="expense-note" name="expense.note" ng-model="expense.note"></textarea>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addExpense()">Save</button>
       </div>
     </div>
   </div>

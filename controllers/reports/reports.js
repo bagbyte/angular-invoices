@@ -1,11 +1,15 @@
 'use strict';
 
-angular.module('businessManager.reports', [])
-    .controller('reports', ['$scope', 'reportsDataFactory', function($scope, dataFactory) {
+angular.module('businessManager.reports', ['ui.bootstrap.modal'])
+    .controller('reports', ['$scope', '$filter', 'reportsDataFactory', function($scope, $filter, dataFactory) {
 
         $scope.status;
         $scope.reports;
         $scope.orders;
+
+        $scope.report = emptyReport();
+        $scope.expense = emptyExpense();
+        $scope.newExpense = true;
 
         getReports();
 
@@ -16,6 +20,45 @@ angular.module('businessManager.reports', [])
                 }, function (error) {
                     $scope.status = 'Unable to load reports: ' + error.message;
                 });
+        }
+
+        function emptyExpense() {
+            return {
+                id: null,
+                amount: 0,
+                hasInvoice: false,
+                description: '',
+                note: ''
+            };
+        }
+
+        function emptyReport() {
+            return {
+                id: null,
+                date: $filter('date')(new Date(), 'dd/MM/yyyy'),
+                total: 0.0,
+                cash: 0.0,
+                extra: 0.0,
+                note: '',
+                expenses: []
+            };
+        }
+
+        function getExtraValue(report) {
+            var extra = 0;
+
+            if (!isNaN(report.total))
+                extra = report.total;
+
+            if (!isNaN(report.cash))
+                extra -= report.cash;
+
+            angular.forEach(report.expenses, function(expense, key) {
+                if (!isNaN(expense.amount))
+                    extra -= expense.amount;
+            });
+
+            return extra;
         }
 
         $scope.updateReport = function (id) {
@@ -79,23 +122,58 @@ angular.module('businessManager.reports', [])
                 });
         };
 
-        $scope.openExpenseForm = function(size) {
-            var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: '/controllers/expenses/form.html',
-                controller: 'expenses',
-                size: size,
-                resolve: {
-                    items: function () {
-                        return $scope.items;
-                    }
-                }
-            });
+        $scope.extraValue = function() {
+            return getExtraValue($scope.report);
+        };
 
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-            }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-            });
-        }
+        $scope.updateExtraValue = function() {
+            $scope.report.extra = getExtraValue($scope.report);
+        };
+
+        $scope.emptyExpense = function() {
+            $scope.expense = emptyExpense();
+            $scope.newExpense = true;
+        };
+
+        $scope.openExpenseForm = function(expense) {
+        };
+
+        $scope.addExpense = function() {
+            if ($scope.newExpense)
+                $scope.report.expenses.push($scope.expense);
+
+            $scope.updateExtraValue();
+        };
+
+        $scope.hasExpenses = function() {
+            return $scope.report.expenses.length > 0;
+        };
+
+        $scope.deleteExpense = function(index) {
+            $scope.report.expenses.splice(index, 1);
+
+            $scope.updateExtraValue();
+        };
+
+        $scope.setCurrentExpense = function(index) {
+            $scope.newExpense = false;
+            $scope.expense = $scope.report.expenses[index];
+        };
+/*
+        $scope.deleteExpense = function(expense) {
+            var index = $scope.report.expenses.indexOf(expense);
+            $scope.report.expenses.splice(index, 1);
+        };
+
+        $scope.setCurrentExpense = function(expense) {
+            $scope.newExpense = false;
+            $scope.expense = expense;
+        };
+*/
+
+        $('#report-date').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_4",
+            format: 'DD/MM/YYYY'
+        });
     }]);
